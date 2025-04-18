@@ -1,4 +1,4 @@
-Nome:
+Nome: 
 Turma: ADS 371
 Prontuário: CB
 
@@ -21,7 +21,7 @@ R: update notas set ds_situacao =
 		else 'Exame'
 	end
 
-4)
+4) Execute uma cláusula para arredondar as notas dos alunos seguindo o critério:
 
 R: update notas set vl_media =
 	CASE
@@ -30,6 +30,145 @@ R: update notas set vl_media =
 		else floor(vl_media) + 0.5
 	end
 
-5)
+5) Obtenha a quantidade de alunos, a maior nota, a menor nota e a média geral de todos os alunos
 
-R:
+R:select 
+	COUNT (nm_aluno) as Quantidade_Alunos,
+	max(vl_media) as Maior_nota,
+	min(vl_media) as Menor_nota,
+	avg(vl_media) as Media_Geral
+
+from notas
+
+6) Execute uma cláusula para mostrar os dados da tabela ordenados pelo nome do aluno
+
+R:select * from notas
+order by nm_aluno
+
+7) Execute uma cláusula para mostrar os dados da tabela em ordem decrescente de média e crescente
+de nome
+
+R:select * from notas
+order by vl_media desc, nm_aluno asc
+
+8) Obtenha a lista (nome e média) dos 10 alunos com melhor desempenho (10 melhores médias)
+
+R: select top 10 nm_aluno, vl_media from notas
+order by vl_media desc
+
+9) Obtenha a lista (nome e média) dos 10 alunos com pior desempenho (10 piores médias)
+
+R: select top 10 nm_aluno, vl_media from notas
+order by vl_media
+
+10) Obtenha uma lista com o valor da média e número de alunos que obtiveram aquela média
+
+R: select floor(avg(vl_media)) as Media, count(*) as numero_alunos from notas
+where vl_media = (select avg(vl_media) from notas)
+
+11) A partir da tabela notas crie duas outras tabelas:
+aprovados (com todos os alunos cuja média seja igual ou superior a 6.0)
+exame (com todos os alunos cuja média seja inferior a 6.0)
+
+R:select * into aprovados from notas
+where vl_media >= 6
+
+select * into exame from notas
+where vl_media < 6
+
+12) Montar uma consulta que retorne uma msg que um sistema de e-mail enviará a todos os alunos. A
+msg deverá ter o seguinte formato. Caro(a) nome do aluno(a) – Sua Situação é: situação -
+exibir ainda após a situação as seguintes mensagens: - Parabéns (para os alunos aprovados), - Você
+deverá comparecer no dia 30/04 para a prova final (para os alunos de exame) e Infelizmente você
+deverá refazer a disciplina no próximo semestre (para os alunos reprovados).
+
+R:select 'Caro(a) ' + nm_aluno + ' sua situação é: ' + ds_situacao + ' | ' +
+case
+	when ds_situacao = 'Aprovado' then ' Parabéns'
+	when ds_situacao = 'Exame' then ' Você deverá comparecer no dia 30/04 para a prova final'
+	else  ' Infelizmente você deverá refazer a disciplina no próximo semestre'
+end as mensagem
+
+from notas
+
+No mesmo banco, carregue e execute o Script que cria a tabela de vendas e a
+popula com alguns registros
+Após, responder quais os comandos que fazem o solicitado?
+
+12) Listar toda a tabela de vendas
+
+R: select * from vendas
+
+13) qual o valor total de vendas?
+
+R: select sum(vl_venda) from vendas
+
+14) qual o valor das vendas do vendedor 1?
+
+R: select sum(vl_venda) from vendas
+where cd_vendedor = 1
+
+15) qual a venda com valor mínimo?
+
+R:select * from vendas
+where vl_venda = (select min(vl_venda) from vendas)
+
+16) qual a venda com valor máximo?
+
+R:select * from vendas
+where vl_venda = (select max(vl_venda) from vendas)
+
+17) qual a média de vendas?
+
+R: select avg(vl_venda) as Media_Vendas from vendas
+
+18) quantas vendas foram feitas?
+
+R: select count(vl_venda) as Numero_de_vendas from vendas
+
+19) quantas vendas o vendedor 1 fez?
+
+R: select count(*) as Quantidade_Vendas from vendas
+where cd_vendedor = 1
+
+20) qual o valor médio de vendas do vendedor 1?
+
+R: select avg(vl_venda) from vendas
+where cd_vendedor = 1
+
+21) monte uma consulta que retorne o vendedor e a soma total de suas vendas
+
+R: select cd_vendedor, sum(vl_venda) from vendas
+group by cd_vendedor
+
+22) monte uma consulta que em cada linha retorne o código do vendedor,
+a soma de suas vendas, quantas vendas ele fez, a média de suas vendas, sua menor
+venda e sua venda máxima
+
+R: select cd_vendedor, 
+		sum(vl_venda) as Soma_Vendas, 
+		count(vl_venda) as Numero_Vendas, 
+		avg(vl_venda) as Media_vendas, 
+		min(vl_venda) as Menor_Venda, 
+		max(vl_venda) as Maior_venda from vendas
+group by cd_vendedor
+
+23) Quantos vendedores distintos temos nessa tabela?
+
+R: select count(distinct cd_vendedor) as Quantidade_de_Vendedores from vendas
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
